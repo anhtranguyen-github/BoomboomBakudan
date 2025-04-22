@@ -1,13 +1,13 @@
 version: "3.6"
 services:
-  coincap-producer:
+  binance-producer:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: coincap-producer
+    container_name: binance-producer
     environment:
-      REDPANDA_BROKERS: "coincap-redpanda:29092"
+      REDPANDA_BROKERS: "binance-redpanda:29092"
       ASSET_PRICES_TOPIC: "data.asset_prices"
     depends_on:
-      coincap-redpanda:
+      binance-redpanda:
         condition: service_healthy

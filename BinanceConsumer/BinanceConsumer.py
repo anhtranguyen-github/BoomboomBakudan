@@ -31,10 +31,10 @@ def decode_asset_avro_message(data):
         print(f"Error decoding message: {str(e)}")
         return None
 
-class CoincapConsumer:
+class BinanceConsumer:
     def __init__(self) -> None:
         self.spark = SparkSession.builder \
-            .appName('coincap-consumer') \
+            .appName('binance-consumer') \
             .master(os.environ.get('SPARK_MASTER', 'local[*]')) \
             .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0") \
             .config("spark.cassandra.connection.host", os.environ.get('ASSET_CASSANDRA_HOST', 'localhost')) \
@@ -105,8 +105,8 @@ class CoincapConsumer:
 
 if __name__ == "__main__":
     try:
-        print("Starting CoincapConsumer...")
-        consumer = CoincapConsumer()
+        print("Starting BinanceConsumer...")
+        consumer = BinanceConsumer()
 
         topic = os.environ.get('ASSET_PRICES_TOPIC', 'data.asset_prices')
         print(f"Reading from topic: {topic}")

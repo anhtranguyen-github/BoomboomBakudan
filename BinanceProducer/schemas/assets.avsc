@@ -1,5 +1,5 @@
 {
-    "namespace":  "io.coincap",
+    "namespace":  "io.binance",
     "type": "record",
     "name": "assets",
     "fields": [

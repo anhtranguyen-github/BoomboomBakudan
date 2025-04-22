@@ -1,48 +1,47 @@
-version: "3.6"
 services:
-  coincap-consumer:
+  binance-consumer:
     build:
       context: .
       dockerfile: SparkMaster.DockerFile
-    container_name: coincap-consumer
+    container_name: binance-consumer
     ports:
       - 9090:8080
       - 7014:7077
       - 4010:4040
     environment:
-      REDPANDA_BROKERS: "coincap-redpanda:29092"
+      REDPANDA_BROKERS: "binance-redpanda:29092"
       ASSET_PRICES_TOPIC: "data.asset_prices"
       ASSET_SCHEMA_LOCATION: "/src/schemas/assets.avsc"
     depends_on:
-      coincap-redpanda:
+      binance-redpanda:
         condition: service_healthy
 
-  coincap-consumer-worker-1:
+  binance-consumer-worker-1:
     build:
       context: .
       dockerfile: SparkWorker.DockerFile
-    container_name: coincap-consumer-worker-1
+    container_name: binance-consumer-worker-1
     ports:
       - 8041:8081
     depends_on:
-      - coincap-consumer
+      - binance-consumer
     environment:
       SPARK_MODE: worker
       SPARK_WORKER_CORES: 2
       SPARK_WORKER_MEMORY: 1g
-      SPARK_MASTER_URL: spark://coincap-consumer:7077
+      SPARK_MASTER_URL: spark://binance-consumer:7077
 
-  coincap-consumer-worker-2:
+  binance-consumer-worker-2:
     build:
       context: .
       dockerfile: SparkWorker.DockerFile
-    container_name: coincap-consumer-worker-2
+    container_name: binance-consumer-worker-2
     ports:
       - 8042:8081
     depends_on:
-      - coincap-consumer
+      - binance-consumer
     environment:
       SPARK_MODE: worker
       SPARK_WORKER_CORES: 2
       SPARK_WORKER_MEMORY: 1g
-      SPARK_MASTER_URL: spark://coincap-consumer:7077
+      SPARK_MASTER_URL: spark://binance-consumer:7077
