@@ -159,3 +159,21 @@ services:
     volumes:
       - ./init-cassandra.sh:/init-cassandra.sh
     command: ["/init-cassandra.sh"]
+
+  binance-grafana:
+    image: grafana/grafana-enterprise
+    container_name: binance-grafana
+    depends_on:
+      binance-cassandra:
+        condition: service_healthy
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - grafana-log:/var/log/grafana
+      - grafana-config:/etc/grafana
+
+volumes:
+  grafana-data: {}
+  grafana-log: {}
+  grafana-config: {} 

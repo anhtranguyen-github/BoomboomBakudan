@@ -24,13 +24,11 @@
     {
       "datasource": {
         "type": "hadesarchitect-cassandra-datasource",
-        "uid": "P3C0D792EC78D5654"
+        "uid": "aejppzsbohz40c"
       },
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
+          "color": { "mode": "palette-classic" },
           "custom": {
             "axisBorderShow": true,
             "axisCenteredZero": false,
@@ -41,55 +39,31 @@
             "drawStyle": "line",
             "fillOpacity": 17,
             "gradientMode": "opacity",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
             "insertNulls": false,
             "lineInterpolation": "linear",
-            "lineStyle": {
-              "fill": "solid"
-            },
+            "lineStyle": { "fill": "solid" },
             "lineWidth": 1,
             "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
+            "scaleDistribution": { "type": "linear" },
             "showPoints": "auto",
             "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
+            "stacking": { "group": "A", "mode": "none" },
+            "thresholdsStyle": { "mode": "off" }
           },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
+              { "color": "green", "value": null },
+              { "color": "red", "value": 80 }
             ]
           },
           "unit": "currencyUSD"
         },
         "overrides": []
       },
-      "gridPos": {
-        "h": 11,
-        "w": 24,
-        "x": 0,
-        "y": 0
-      },
+      "gridPos": { "h": 11, "w": 24, "x": 0, "y": 0 },
       "id": 1,
       "options": {
         "legend": {
@@ -98,22 +72,20 @@
           "placement": "bottom",
           "showLegend": true
         },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
+        "tooltip": { "mode": "single", "sort": "none" }
       },
       "targets": [
         {
           "datasource": {
             "type": "hadesarchitect-cassandra-datasource",
-            "uid": "P3C0D792EC78D5654"
+            "uid": "aejppzsbohz40c"
           },
           "keyspace": "assets",
           "queryType": "query",
           "rawQuery": true,
           "refId": "A",
-          "target": "SELECT asset_name, asset_price, collected_at FROM assets"
+          "target": "SELECT asset_name, asset_price, collected_at FROM assets",
+          "timestamp": "collected_at"
         }
       ],
       "title": "Asset Prices Over Time",
@@ -122,33 +94,23 @@
     {
       "datasource": {
         "type": "hadesarchitect-cassandra-datasource",
-        "uid": "P3C0D792EC78D5654"
+        "uid": "aejppzsbohz40c"
       },
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
+          "color": { "mode": "thresholds" },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
+              { "color": "green", "value": null }
             ]
           },
           "unit": "currencyUSD"
         },
         "overrides": []
       },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 11
-      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 11 },
       "id": 2,
       "options": {
         "colorMode": "value",
@@ -156,9 +118,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -169,7 +129,7 @@
         {
           "datasource": {
             "type": "hadesarchitect-cassandra-datasource",
-            "uid": "P3C0D792EC78D5654"
+            "uid": "aejppzsbohz40c"
           },
           "keyspace": "assets",
           "queryType": "query",
@@ -184,36 +144,22 @@
     {
       "datasource": {
         "type": "hadesarchitect-cassandra-datasource",
-        "uid": "P3C0D792EC78D5654"
+        "uid": "aejppzsbohz40c"
       },
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
+          "color": { "mode": "palette-classic" },
           "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            }
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false }
           },
           "mappings": []
         },
         "overrides": []
       },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 11
-      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 11 },
       "id": 3,
       "options": {
-        "displayLabels": [
-          "name",
-          "value"
-        ],
+        "displayLabels": ["name", "value"],
         "legend": {
           "displayMode": "list",
           "placement": "bottom",
@@ -221,22 +167,17 @@
         },
         "pieType": "pie",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
+        "tooltip": { "mode": "single", "sort": "none" }
       },
       "targets": [
         {
           "datasource": {
             "type": "hadesarchitect-cassandra-datasource",
-            "uid": "P3C0D792EC78D5654"
+            "uid": "aejppzsbohz40c"
           },
           "keyspace": "assets",
           "queryType": "query",
@@ -252,9 +193,7 @@
   "refresh": "5s",
   "schemaVersion": 39,
   "tags": ["cassandra", "binance"],
-  "templating": {
-    "list": []
-  },
+  "templating": { "list": [] },
   "time": {
     "from": "now-1h",
     "to": "now"
@@ -265,4 +204,4 @@
   "uid": "cassandra-dashboard",
   "version": 1,
   "weekStart": ""
-} 
+}
