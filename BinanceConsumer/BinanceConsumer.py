@@ -35,6 +35,9 @@ def decode_asset_avro_message(data):
         decoder = avro.io.BinaryDecoder(bytes_reader)
         reader = avro.io.DatumReader(asset_avro_schema)
         decoded = reader.read(decoder)
+        # Print is_closed value for debugging
+        if 'is_closed' in decoded:
+            print(f"Decoded is_closed value: '{decoded['is_closed']}' (type: {type(decoded['is_closed'])})")
         return decoded
     except Exception as e:
         print(f"Error decoding message: {str(e)}")
@@ -83,8 +86,8 @@ class BinanceConsumer:
                 func.col('decoded_data.volume').cast('float').alias('volume'),
                 func.col('decoded_data.quote_volume').cast('float').alias('quote_volume'),
                 func.col('decoded_data.trades').cast('int').alias('trades'),
-                func.when(func.col('decoded_data.is_closed') == 'true', True)
-                    .when(func.col('decoded_data.is_closed') == 'false', False)
+                func.when(func.lower(func.col('decoded_data.is_closed')) == 'true', True)
+                    .when(func.lower(func.col('decoded_data.is_closed')) == 'false', False)
                     .otherwise(None).alias('is_closed'),
                 func.to_timestamp(func.col('decoded_data.timestamp')).alias('timestamp'),
                 func.to_timestamp(func.col('decoded_data.close_time')).alias('close_time'),

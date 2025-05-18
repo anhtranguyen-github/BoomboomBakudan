@@ -88,6 +88,10 @@ class BinanceProducer:
             symbol = data.get('s')
             kline = data['k']
             
+            # Log the actual is_closed value
+            is_closed_value = kline.get('x')
+            logger.info(f"Original is_closed value: '{is_closed_value}' (type: {type(is_closed_value)})")
+            
             asset_name = self.asset_map.get(symbol, symbol.lower())
 
             payload = {
@@ -100,7 +104,7 @@ class BinanceProducer:
                 'volume': kline.get('v'),
                 'quote_volume': kline.get('q'),
                 'trades': str(kline.get('n')),
-                'is_closed': 'true' if kline.get('x') else 'false',
+                'is_closed': str(is_closed_value).lower(),  # Ensure lowercase string
                 'timestamp': dt.datetime.fromtimestamp(kline.get('t') / 1000).strftime("%Y-%m-%d %H:%M:%S"),
                 'close_time': dt.datetime.fromtimestamp(kline.get('T') / 1000).strftime("%Y-%m-%d %H:%M:%S"),
                 'collected_at': dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
