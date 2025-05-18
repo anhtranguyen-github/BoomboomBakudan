@@ -24,7 +24,7 @@ services:
   
   coincap-cassandra-init:
     image: cassandra:latest
-    container_name: coincap-cassandra-init
+    container_name: binance-cassandra-init
     depends_on:
       coincap-cassandra:
         condition: service_healthy
