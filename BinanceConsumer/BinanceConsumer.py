@@ -10,7 +10,16 @@ from pyspark.sql import SparkSession, functions as func
 schema = T.StructType([
     T.StructField("id", T.StringType(), True),
     T.StructField("asset_name", T.StringType(), True),
-    T.StructField("asset_price", T.StringType(), True),
+    T.StructField("open", T.StringType(), True),
+    T.StructField("high", T.StringType(), True),
+    T.StructField("low", T.StringType(), True),
+    T.StructField("close", T.StringType(), True),
+    T.StructField("volume", T.StringType(), True),
+    T.StructField("quote_volume", T.StringType(), True),
+    T.StructField("trades", T.StringType(), True),
+    T.StructField("is_closed", T.StringType(), True),
+    T.StructField("timestamp", T.StringType(), True),
+    T.StructField("close_time", T.StringType(), True),
     T.StructField("collected_at", T.StringType(), True)
 ])
 
@@ -67,8 +76,19 @@ class BinanceConsumer:
             .select(
                 func.col('decoded_data.id'),
                 func.col('decoded_data.asset_name'),
-                func.col('decoded_data.asset_price').cast('float').alias('asset_price'),
-                func.col('decoded_data.collected_at'),
+                func.col('decoded_data.open').cast('float').alias('open'),
+                func.col('decoded_data.high').cast('float').alias('high'),
+                func.col('decoded_data.low').cast('float').alias('low'),
+                func.col('decoded_data.close').cast('float').alias('close'),
+                func.col('decoded_data.volume').cast('float').alias('volume'),
+                func.col('decoded_data.quote_volume').cast('float').alias('quote_volume'),
+                func.col('decoded_data.trades').cast('int').alias('trades'),
+                func.when(func.col('decoded_data.is_closed') == 'true', True)
+                    .when(func.col('decoded_data.is_closed') == 'false', False)
+                    .otherwise(None).alias('is_closed'),
+                func.to_timestamp(func.col('decoded_data.timestamp')).alias('timestamp'),
+                func.to_timestamp(func.col('decoded_data.close_time')).alias('close_time'),
+                func.to_timestamp(func.col('decoded_data.collected_at')).alias('collected_at'),
                 func.date_format(func.current_timestamp(), "yyyy-MM-dd HH:mm:ss").alias('consumed_at')
             )
         

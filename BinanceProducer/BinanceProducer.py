@@ -55,7 +55,7 @@ class BinanceProducer:
 
         websocket.enableTrace(True)
         self.ws = websocket.WebSocketApp(
-            'wss://stream.binance.com:9443/stream?streams=btcusdt@ticker/ethusdt@ticker/bnbusdt@ticker',
+            'wss://stream.binance.com:9443/stream?streams=btcusdt@kline_1m/ethusdt@kline_1m/bnbusdt@kline_1m',
             on_open=self.on_open,
             on_message=self.on_message,
             on_error=self.on_error,
@@ -83,16 +83,26 @@ class BinanceProducer:
             logger.error(f'Failed to parse message: {str(e)}')
             return
 
-        if 'data' in message_data:
+        if 'data' in message_data and 'k' in message_data['data']:
             data = message_data['data']
             symbol = data.get('s')
-            price = data.get('c')
+            kline = data['k']
+            
             asset_name = self.asset_map.get(symbol, symbol.lower())
 
             payload = {
                 'id': str(uuid.uuid4()),
                 'asset_name': asset_name,
-                'asset_price': price,
+                'open': kline.get('o'),
+                'high': kline.get('h'),
+                'low': kline.get('l'),
+                'close': kline.get('c'),
+                'volume': kline.get('v'),
+                'quote_volume': kline.get('q'),
+                'trades': str(kline.get('n')),
+                'is_closed': 'true' if kline.get('x') else 'false',
+                'timestamp': dt.datetime.fromtimestamp(kline.get('t') / 1000).strftime("%Y-%m-%d %H:%M:%S"),
+                'close_time': dt.datetime.fromtimestamp(kline.get('T') / 1000).strftime("%Y-%m-%d %H:%M:%S"),
                 'collected_at': dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
             logger.debug(f'Created payload: {payload}')

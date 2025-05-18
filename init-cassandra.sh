@@ -14,7 +14,16 @@ USE assets;
 CREATE TABLE IF NOT EXISTS assets (
   id TEXT PRIMARY KEY,
   asset_name TEXT,
-  asset_price FLOAT,
+  open FLOAT,
+  high FLOAT,
+  low FLOAT,
+  close FLOAT, 
+  volume FLOAT,
+  quote_volume FLOAT,
+  trades INT,
+  is_closed BOOLEAN,
+  timestamp TEXT,
+  close_time TEXT,
   collected_at TEXT,
   consumed_at TEXT
 );

@@ -5,7 +5,16 @@
     "fields": [
         {"name": "id", "type": "string"},
         {"name": "asset_name", "type": "string"},
-        {"name": "asset_price", "type": "string"},
+        {"name": "open", "type": "string"},
+        {"name": "high", "type": "string"},
+        {"name": "low", "type": "string"},
+        {"name": "close", "type": "string"},
+        {"name": "volume", "type": "string"},
+        {"name": "quote_volume", "type": "string"},
+        {"name": "trades", "type": "string"},
+        {"name": "is_closed", "type": "string"},
+        {"name": "timestamp", "type": "string"},
+        {"name": "close_time", "type": "string"},
         {"name": "collected_at", "type": "string"}
     ]
 }

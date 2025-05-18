@@ -1,4 +1,0 @@
-docker exec -i binance-cassandra cqlsh -e "
-USE assets;
-SELECT id, asset_name, asset_price, collected_at, consumed_at FROM assets LIMIT 50;
-"
