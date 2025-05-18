@@ -1,4 +1,4 @@
-# BoomboomBakudan: Real-Time Crypto Data Stream
+Real-Time Crypto Data Stream
 
 A robust data streaming pipeline that captures real-time cryptocurrency price data from Binance, processes it through a scalable stream processing architecture, and makes it available for analysis and visualization.
 
