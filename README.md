@@ -91,6 +91,29 @@ self.asset_map = {
 
 And update the WebSocket connection URL to include the new pair.
 
+## Data Schema
+
+The system captures comprehensive OHLCV (Open-High-Low-Close-Volume) data from Binance:
+
+| Field | Description | Type |
+|-------|-------------|------|
+| id | Unique identifier | UUID |
+| asset_name | Cryptocurrency name | String |
+| open | Opening price in the period | Float |
+| high | Highest price in the period | Float |
+| low | Lowest price in the period | Float |
+| close | Closing price in the period | Float |
+| volume | Trading volume in base asset | Float |
+| quote_volume | Trading volume in quote asset | Float |
+| trades | Number of trades in the period | Integer |
+| is_closed | Whether the candlestick is closed | Boolean |
+| timestamp | Start time of the period | Timestamp |
+| close_time | End time of the period | Timestamp |
+| collected_at | Time when data was collected | Timestamp |
+| consumed_at | Time when data was processed | Timestamp |
+
+This schema allows for comprehensive analysis of price movements, volatility, and trading activity.
+
 ## Configuration
 
 ### Environment Variables
