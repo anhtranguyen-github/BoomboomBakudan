@@ -151,3 +151,40 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 [MIT License](LICENSE)
 
+## Usage with ML Pipeline
+
+### Running the Complete System
+
+1. Start the entire system including ML Pipeline:
+
+```bash
+docker-compose up -d
+```
+
+This will start all services defined in docker-compose.yaml and docker-compose.override.yml.
+
+2. To run a one-time ML training:
+
+```bash
+docker exec bitcoin-ml-pipeline python bitcoin_trading/train_live.py
+```
+
+3. Check the logs:
+
+```bash
+docker logs -f bitcoin-ml-pipeline
+```
+
+### Running the ML Pipeline Only
+
+If you want to run just the ML Pipeline against existing services:
+
+```bash
+cd MLPipeline
+./run_pipeline.sh
+```
+
+This will check if required services are running before starting the ML Pipeline.
+
+For more information about the ML Pipeline, see [MLPipeline/README.md](MLPipeline/README.md).
+

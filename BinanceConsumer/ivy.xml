@@ -1,5 +1,5 @@
 <ivy-module version="2.0">
-  <info organisation="org.apache.spark" module="cooincap-consumer" />
+  <info organisation="org.apache.spark" module="coincap-consumer" />
 
   <configurations>
     <conf name="default"/>
