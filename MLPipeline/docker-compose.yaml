@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  model-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bitcoin-model-service
+    restart: unless-stopped
+    environment:
+      - SPARK_MASTER=local[*]
+      - ASSET_CASSANDRA_HOST=cassandra
+      - ASSET_CASSANDRA_PORT=9042
+      - ASSET_CASSANDRA_USERNAME=${CASSANDRA_USERNAME:-cassandra}
+      - ASSET_CASSANDRA_PASSWORD=${CASSANDRA_PASSWORD:-cassandra}
+      - ASSET_CASSANDRA_KEYSPACE=assets
+      - ASSET_CASSANDRA_TABLE=assets
+      - MODEL_PREDICTIONS_TABLE=model_predictions
+      - REDPANDA_BROKERS=redpanda:9092
+      - ASSET_PRICES_TOPIC=data.asset_prices
+      - MODEL_SERVICE_STREAM_MODE=true
+      - MODELS_DIR=/app/trained_models
+    volumes:
+      - ./trained_models:/app/trained_models
+    networks:
+      - bitcoin-network
+    depends_on:
+      - cassandra
+      - redpanda
+
+networks:
+  bitcoin-network:
+    external: true 

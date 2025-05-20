@@ -6,6 +6,7 @@ This document contains commands and procedures to debug the entire data pipeline
 - Redpanda: Kafka-compatible message broker
 - BinanceConsumer: Processes messages with Apache Spark and stores in Cassandra
 - Cassandra: Database for storing cryptocurrency data
+- **Model Service (binance-model-service): Runs ML models on Binance data and saves predictions to Cassandra**
 
 ## Redpanda/Kafka Debugging
 
@@ -90,6 +91,48 @@ docker run -d --name binance-consumer --network boomboombakudan_default -e SPARK
 docker exec binance-consumer sh -c "cat /tmp/checkpoint/metadata | grep 'Batch'"
 ```
 
+## Model Service Debugging
+
+### Check if model service container is running
+```bash
+docker ps | grep model-service
+```
+
+### View model service logs
+```bash
+docker logs binance-model-service -f
+```
+
+### Rebuild model service after code changes
+```bash
+docker build -t boomboombakudan-model-service:latest ./MLPipeline
+```
+
+### Delete and recreate model service container
+```bash
+docker stop binance-model-service && docker rm binance-model-service
+docker run -d --name binance-model-service --network boomboombakudan_default \
+  -e SPARK_MASTER="local[*]" \
+  -e REDPANDA_BROKERS="binance-redpanda:29092" \
+  -e ASSET_PRICES_TOPIC="data.asset_prices" \
+  -e ASSET_CASSANDRA_HOST="binance-cassandra" \
+  -e ASSET_CASSANDRA_PORT=9042 \
+  -e ASSET_CASSANDRA_USERNAME="adminadmin" \
+  -e ASSET_CASSANDRA_PASSWORD="adminadmin" \
+  -e ASSET_CASSANDRA_KEYSPACE="assets" \
+  -e ASSET_CASSANDRA_TABLE="assets" \
+  -e MODEL_PREDICTIONS_TABLE="model_predictions" \
+  -e MODEL_SERVICE_STREAM_MODE="true" \
+  -e MODELS_DIR="/app/trained_models" \
+  -v $(pwd)/MLPipeline/trained_models:/app/trained_models \
+  boomboombakudan-model-service:latest
+```
+
+### Check predictions in Cassandra
+```bash
+docker exec -i binance-cassandra cqlsh -e "USE assets; SELECT * FROM model_predictions LIMIT 5;"
+```
+
 ## Cassandra Debugging
 
 ### Check if Cassandra is running
@@ -124,10 +167,11 @@ docker logs binance-cassandra
 
 ## Common Issues & Solutions
 
-### 1. Schema mismatch between producer and consumer
-If you see Avro serialization errors, check that schemas match exactly between:
+### 1. Schema mismatch between producer, consumer, and model service
+If you see Avro serialization errors or prediction errors, check that schemas match exactly between:
 - BinanceProducer/schemas/assets.avsc 
 - BinanceConsumer/schemas/assets.avsc
+- ModelService expects the same feature names as in model_metadata_*.json
 
 ### 2. Type conversion errors
 For fields like 'trades', ensure proper string conversion in the producer:
@@ -140,8 +184,8 @@ For fields like 'trades', ensure proper string conversion in the producer:
 - Check producer logs for connection errors
 - Verify network connectivity between containers
 
-### 4. Container restart after schema changes
-After changing Avro schemas or database schemas, you typically need to:
+### 4. Container restart after schema or model changes
+After changing Avro schemas, database schemas, or retraining models, you typically need to:
 1. Rebuild the container images
 2. Remove old containers
 3. Create new containers
@@ -169,5 +213,11 @@ docker logs binance-consumer | grep "Processing"
 docker exec -i binance-cassandra cqlsh -e "
 USE assets;
 SELECT id, asset_name, open, high, low, close, volume, quote_volume, trades, is_closed, timestamp, close_time, collected_at, consumed_at FROM assets LIMIT 10;
+"
+
+# 5. Verify model predictions in Cassandra
+docker exec -i binance-cassandra cqlsh -e "
+USE assets;
+SELECT id, asset_name, timestamp, model_name, prediction, probability, predicted_at FROM model_predictions LIMIT 10;
 "
 ```

@@ -29,6 +29,10 @@ CREATE TABLE IF NOT EXISTS assets (
 );
 "
 
+echo "Creating model predictions table..."
+# Execute the model predictions table script
+cqlsh binance-cassandra -u cassandra -p cassandra -f /init-model-predictions.cql
+
 echo "Creating admin user..."
 # Create admin user
 cqlsh binance-cassandra -u cassandra -p cassandra -e "

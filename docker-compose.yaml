@@ -137,6 +137,35 @@ services:
       SPARK_WORKER_MEMORY: 1g
       SPARK_MASTER_URL: spark://binance-consumer:7077
 
+  # ML Model Service
+  binance-model-service:
+    build:
+      context: ./MLPipeline
+      dockerfile: Dockerfile
+    container_name: binance-model-service
+    environment:
+      SPARK_MASTER: "local[*]"
+      REDPANDA_BROKERS: "binance-redpanda:29092"
+      ASSET_PRICES_TOPIC: "data.asset_prices"
+      ASSET_CASSANDRA_HOST: "binance-cassandra"
+      ASSET_CASSANDRA_PORT: 9042
+      ASSET_CASSANDRA_USERNAME: "adminadmin"
+      ASSET_CASSANDRA_PASSWORD: "adminadmin"
+      ASSET_CASSANDRA_KEYSPACE: 'assets'
+      ASSET_CASSANDRA_TABLE: 'assets'
+      MODEL_PREDICTIONS_TABLE: 'model_predictions'
+      MODEL_SERVICE_STREAM_MODE: 'true'
+      MODELS_DIR: '/app/trained_models'
+    volumes:
+      - ./MLPipeline/trained_models:/app/trained_models
+    depends_on:
+      binance-redpanda:
+        condition: service_healthy
+      binance-cassandra:
+        condition: service_healthy
+      binance-consumer:
+        condition: service_started
+
   # Cassandra service
   binance-cassandra:
     image: cassandra:4.1.3
@@ -158,6 +187,7 @@ services:
         condition: service_healthy
     volumes:
       - ./init-cassandra.sh:/init-cassandra.sh
+      - ./Cassandra/init-model-predictions.cql:/init-model-predictions.cql
     command: ["/init-cassandra.sh"]
 
   binance-grafana:

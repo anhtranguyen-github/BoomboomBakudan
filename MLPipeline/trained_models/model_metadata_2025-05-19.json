@@ -1,0 +1,58 @@
+{
+    "training_date": "2025-05-19",
+    "saved_models": [
+        "LDA",
+        "GBM",
+        "XGB",
+        "CAT"
+    ],
+    "model_types": {
+        "full_features": {
+            "description": "Models trained on all technical indicators",
+            "input_features": [
+                "Open",
+                "High",
+                "Low",
+                "Close",
+                "Volume",
+                "MA21",
+                "MA63",
+                "MA252",
+                "EMA10",
+                "EMA30",
+                "EMA200",
+                "MOM10",
+                "MOM30",
+                "RSI10",
+                "RSI30",
+                "RSI200",
+                "%K10",
+                "%K30",
+                "%K200",
+                "%D10",
+                "%D30",
+                "%D200",
+                "SMA1",
+                "SMA2"
+            ],
+            "output": "Binary classification (0 or 1)",
+            "output_meaning": {
+                "0": "Price is expected to decrease",
+                "1": "Price is expected to increase"
+            },
+            "file_pattern": "*_full_*.joblib"
+        }
+    },
+    "serving_instructions": {
+        "preprocessing": [
+            "Ensure all input features match the expected feature names",
+            "Handle missing values by forward-filling or using last valid values",
+            "No need for additional scaling as it's handled in model pipelines"
+        ],
+        "prediction": [
+            "Load model using joblib.load('model_file.joblib')",
+            "Ensure input DataFrame has the correct features in the right order",
+            "Get prediction using model.predict(X)"
+        ]
+    }
+}
